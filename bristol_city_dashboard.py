@@ -99,4 +99,4 @@ st.dataframe(
     filtered_data[
         ["short_name", "general_position", "status", "nationality_name", "value_eur", "pace", "shooting"]
     ].sort_values(by="value_eur", ascending=False)  # Updated column
-
+)
