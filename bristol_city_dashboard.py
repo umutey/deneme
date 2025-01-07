@@ -23,27 +23,27 @@ selected_status = st.sidebar.multiselect(
 )
 selected_position = st.sidebar.multiselect(
     "Select Position(s)", 
-    players_data["general_position"].unique(), 
+    players_data["general_position"].unique(),  # Updated to match column
     default=players_data["general_position"].unique()
 )
 selected_nationality = st.sidebar.multiselect(
     "Select Nationality", 
-    players_data["nationality"].unique(), 
-    default=players_data["nationality"].unique()
+    players_data["nationality_name"].unique(),  # Updated to match column
+    default=players_data["nationality_name"].unique()
 )
 
 # Filter Data
 filtered_data = players_data[
     (players_data["status"].isin(selected_status)) &
     (players_data["general_position"].isin(selected_position)) &
-    (players_data["nationality"].isin(selected_nationality))
+    (players_data["nationality_name"].isin(selected_nationality))  # Updated to match column
 ]
 
 # Main Dashboard
 st.title("Bristol City FC Team Dashboard")
 st.markdown("### Overview")
 st.metric("Total Players", len(filtered_data))
-st.metric("Average Market Value (€M)", filtered_data["market_value"].mean().round(2))
+st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round(2))  # Updated to use 'value_eur'
 
 # Nationality Visualization on Map
 st.markdown("### Player Nationalities")
@@ -57,9 +57,9 @@ fig = px.scatter_geo(
     geo_df, 
     lat="latitude", 
     lon="longitude", 
-    hover_name="name",
+    hover_name="short_name",  # Updated to use 'short_name'
     title="Player Nationalities", 
-    size="market_value", 
+    size="value_eur",  # Updated to use 'value_eur'
     projection="natural earth"
 )
 st.plotly_chart(fig)
@@ -88,7 +88,7 @@ draw_pitch(ax)
 
 # Plot player positions
 for _, row in filtered_data.iterrows():
-    ax.text(row["x_position"], row["y_position"], row["name"], fontsize=8, ha='center', color="blue")
+    ax.text(row["ls"], row["st"], row["short_name"], fontsize=8, ha='center', color="blue")  # Updated for positions
 
 st.pyplot(fig)
 
@@ -96,8 +96,8 @@ st.pyplot(fig)
 st.markdown("### Player Stats")
 st.dataframe(
     filtered_data[
-        ["name", "general_position", "status", "nationality", "market_value", "goals", "assists"]
-    ].sort_values(by="market_value", ascending=False)
+        ["short_name", "general_position", "status", "nationality_name", "value_eur", "pace", "shooting"]
+    ].sort_values(by="value_eur", ascending=False)  # Updated columns
 )
 
 
