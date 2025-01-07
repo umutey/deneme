@@ -23,12 +23,12 @@ selected_status = st.sidebar.multiselect(
 )
 selected_position = st.sidebar.multiselect(
     "Select Position(s)", 
-    players_data["general_position"].unique(),  # Updated to match column
+    players_data["general_position"].unique(),
     default=players_data["general_position"].unique()
 )
 selected_nationality = st.sidebar.multiselect(
     "Select Nationality", 
-    players_data["nationality_name"].unique(),  # Updated to match column
+    players_data["nationality_name"].unique(),
     default=players_data["nationality_name"].unique()
 )
 
@@ -36,19 +36,19 @@ selected_nationality = st.sidebar.multiselect(
 filtered_data = players_data[
     (players_data["status"].isin(selected_status)) &
     (players_data["general_position"].isin(selected_position)) &
-    (players_data["nationality_name"].isin(selected_nationality))  # Updated to match column
+    (players_data["nationality_name"].isin(selected_nationality))
 ]
 
 # Main Dashboard
 st.title("Bristol City FC Team Dashboard")
 st.markdown("### Overview")
 st.metric("Total Players", len(filtered_data))
-st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round(2))  # Updated to use 'value_eur'
+st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round(2))
 
 # Nationality Visualization on Map
 st.markdown("### Player Nationalities")
 # Update the file path to point to the downloaded shapefile
-world = gpd.read_file("ne_110m_admin_0_countries.shp")
+world = gpd.read_file("ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp")  # Ensure correct relative path
 geo_df = gpd.GeoDataFrame(
     filtered_data, 
     geometry=gpd.points_from_xy(filtered_data["longitude"], filtered_data["latitude"])
@@ -58,9 +58,9 @@ fig = px.scatter_geo(
     geo_df, 
     lat="latitude", 
     lon="longitude", 
-    hover_name="short_name",  # Updated to use 'short_name'
+    hover_name="short_name",
     title="Player Nationalities", 
-    size="value_eur",  # Updated to use 'value_eur'
+    size="value_eur", 
     projection="natural earth"
 )
 st.plotly_chart(fig)
@@ -71,7 +71,6 @@ fig, ax = plt.subplots(figsize=(10, 7))
 
 # Draw the pitch
 def draw_pitch(ax=None):
-    # Pitch Outline
     pitch = Rectangle([0, 0], width=105, height=68, fill=False, color="black")
     center_circle = Circle([52.5, 34], radius=9.15, fill=False, color="black")
     center_spot = Circle([52.5, 34], radius=0.37, fill=True, color="black")
@@ -89,7 +88,7 @@ draw_pitch(ax)
 
 # Plot player positions
 for _, row in filtered_data.iterrows():
-    ax.text(row["ls"], row["st"], row["short_name"], fontsize=8, ha='center', color="blue")  # Updated for positions
+    ax.text(row["ls"], row["st"], row["short_name"], fontsize=8, ha='center', color="blue")
 
 st.pyplot(fig)
 
@@ -98,5 +97,5 @@ st.markdown("### Player Stats")
 st.dataframe(
     filtered_data[
         ["short_name", "general_position", "status", "nationality_name", "value_eur", "pace", "shooting"]
-    ].sort_values(by="value_eur", ascending=False)  # Updated column
+    ].sort_values(by="value_eur", ascending=False)
 )
