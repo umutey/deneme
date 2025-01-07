@@ -47,7 +47,10 @@ st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round
 
 # Nationality Visualization on Map
 st.markdown("### Player Nationalities")
-world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+
+# Load the manually downloaded dataset
+world = gpd.read_file("data/ne_110m_admin_0_countries.shp")
+
 geo_df = gpd.GeoDataFrame(
     filtered_data, 
     geometry=gpd.points_from_xy(filtered_data["longitude"], filtered_data["latitude"])
@@ -63,6 +66,7 @@ fig = px.scatter_geo(
     projection="natural earth"
 )
 st.plotly_chart(fig)
+
 
 # Football Pitch and Player Positions
 st.markdown("### Player Positions on the Pitch")
