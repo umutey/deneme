@@ -47,12 +47,13 @@ st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round
 
 # Nationality Visualization on Map
 st.markdown("### Player Nationalities")
-# Update the file path to point to the downloaded shapefile
-world = gpd.read_file("ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp")  # Ensure correct relative path
-geo_df = gpd.GeoDataFrame(
-    filtered_data, 
-    geometry=gpd.points_from_xy(filtered_data["longitude"], filtered_data["latitude"])
-)
+import requests
+import json
+
+# Load GeoJSON data from an online source
+url = "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
+response = requests.get(url)
+world = gpd.read_file(json.loads(response.text))
 
 fig = px.scatter_geo(
     geo_df, 
