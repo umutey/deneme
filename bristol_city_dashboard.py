@@ -1,3 +1,4 @@
+When I run this code:
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -47,10 +48,8 @@ st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round
 
 # Nationality Visualization on Map
 st.markdown("### Player Nationalities")
-
-# Load the manually downloaded dataset
-world = gpd.read_file("data/ne_110m_admin_0_countries.shp")
-
+# Update the file path to point to the downloaded shapefile
+world = gpd.read_file("ne_110m_admin_0_countries.shp")
 geo_df = gpd.GeoDataFrame(
     filtered_data, 
     geometry=gpd.points_from_xy(filtered_data["longitude"], filtered_data["latitude"])
@@ -66,7 +65,6 @@ fig = px.scatter_geo(
     projection="natural earth"
 )
 st.plotly_chart(fig)
-
 
 # Football Pitch and Player Positions
 st.markdown("### Player Positions on the Pitch")
@@ -101,7 +99,5 @@ st.markdown("### Player Stats")
 st.dataframe(
     filtered_data[
         ["short_name", "general_position", "status", "nationality_name", "value_eur", "pace", "shooting"]
-    ].sort_values(by="value_eur", ascending=False)  # Updated columns
-)
-
+    ].sort_values(by="value_eur", ascending=False)  # Updated column
 
