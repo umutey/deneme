@@ -46,7 +46,7 @@ filtered_data = players_data[
     (players_data["nationality_name"].isin(selected_nationality))
 ]
 
-#from itertools import cycle
+from itertools import cycle
 
 # Define position coordinates for a 3-4-3 formation
 position_coordinates = {
