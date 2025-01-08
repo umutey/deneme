@@ -130,7 +130,7 @@ fig = px.scatter_geo(
 )
 st.plotly_chart(fig)
 
-# Football Pitch and Player Positions
+# Football Pitch and Player Positions with Images
 st.markdown("### Player Positions on the Pitch")
 
 # Create the pitch
@@ -147,46 +147,42 @@ fig.add_shape(type="rect", x0=105, y0=22.32, x1=88.5, y1=45.68, line=dict(color=
 
 # Filter only starting 11 players
 starting_11_data = filtered_data[filtered_data['status'] == 'Starting 11']
-'''
-# Add player positions for starting 11
-fig.add_trace(go.Scatter(
-    x=starting_11_data["x_position"],
-    y=starting_11_data["y_position"],
-    mode="markers+text",
-    marker=dict(size=12, color="blue"),
-    text=starting_11_data["short_name"],  # Player names
-    textposition="top center",
-    hovertemplate=(
-        "<b>%{text}</b><br>" +
-        "Position: %{customdata[0]}<br>" +
-        "Market Value: €%{customdata[1]:,.2f}<br>" +
-        "<extra></extra>"
-    ),
-    customdata=starting_11_data[["general_position", "value_eur"]].values
-))'''
 
-# Add player positions for starting 11 with images
+# Add player positions for starting 11 with clickable names
 fig.add_trace(go.Scatter(
     x=starting_11_data["x_position"],
     y=starting_11_data["y_position"],
     mode="markers+text",
-    marker=dict(size=50, opacity=0.6),  # Customize marker for better visibility
+    marker=dict(size=15, color="rgba(0,0,255,0.5)"),  # Semi-transparent circles
     text=starting_11_data["short_name"],  # Player names
-    textposition="top center",
+    textposition="bottom center",
     hovertemplate=(
         "<b>%{text}</b><br>" +
         "Position: %{customdata[0]}<br>" +
         "Market Value: €%{customdata[1]:,.2f}<br>" +
+        "Nationality: %{customdata[2]}<br>" +
         "<extra></extra>"
     ),
-    customdata=starting_11_data[["general_position", "value_eur"]].values
+    customdata=starting_11_data[["general_position", "value_eur", "nationality_name"]].values
 ))
 
-# Display player pictures for Starting 11
+# Add player images
 for _, player in starting_11_data.iterrows():
-    player_image = get_player_image(player["player_id"])
-    st.image(player_image, caption=player["short_name"], width=80)
-
+    player_image_url = f"Bristol_City_Player_Pics/{player['player_id']}.jpg"  # Use the player's ID for the image filename
+    fig.add_layout_image(
+        dict(
+            source=player_image_url,
+            x=player["x_position"] - 2,  # Adjust x position to center image
+            y=player["y_position"] + 2,  # Adjust y position to center image
+            xref="x",
+            yref="y",
+            sizex=4,
+            sizey=4,
+            xanchor="center",
+            yanchor="middle",
+            layer="above"
+        )
+    )
 
 # Update layout to make the pitch green
 fig.update_layout(
@@ -201,6 +197,7 @@ fig.update_layout(
 
 # Display the pitch
 st.plotly_chart(fig)
+
 
 # Bench Players Visual
 st.markdown("### Bench Players")
