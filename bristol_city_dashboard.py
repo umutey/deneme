@@ -49,7 +49,7 @@ filtered_data = players_data[
 
 # Define a function to add the club logo
 def club_name_with_logo(club_name):
-    return f"<b>{club_name}</b> <img src='bristol_city_logo.png' width=25>"
+    return f"<b>{club_name}</b> <img src='Bristol_City_Logo.png' width=25>"
 
 # Example Usage in Sidebar or Other Text
 st.markdown(
@@ -94,7 +94,7 @@ st.write("Player positions with coordinates:", filtered_data[["short_name", "pla
 
 # Main Dashboard
 st.title("Bristol City FC Team Dashboard")
-st.image("bristol_city_logo.png", width=100, caption="Bristol City FC Logo")
+st.image("Bristol_City_Logo.png", width=100, caption="Bristol City FC Logo")
 st.markdown("### Overview")
 st.metric("Total Players", len(filtered_data))
 st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round(2))
