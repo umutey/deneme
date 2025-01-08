@@ -87,8 +87,7 @@ st.markdown("### Overview")
 st.metric("Total Players", len(filtered_data))
 st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round(2))
 
-# Nationality Visualization on Map
-st.markdown("### Player Nationalities")
+
 # Nationality Visualization on Map
 st.markdown("### Player Nationalities")
 import requests
@@ -110,52 +109,62 @@ fig = px.scatter_geo(
 )
 st.plotly_chart(fig)
 
-
 # Football Pitch and Player Positions
 st.markdown("### Player Positions on the Pitch")
 
 # Create the pitch
 fig = go.Figure()
 
-# Add pitch layout
-fig.add_shape(type="rect", x0=0, y0=0, x1=105, y1=68, line=dict(color="black", width=2))
-fig.add_shape(type="circle", x0=52.5 - 9.15, y0=34 - 9.15, x1=52.5 + 9.15, y1=34 + 9.15, line=dict(color="black", width=2))
-fig.add_shape(type="line", x0=52.5, y0=0, x1=52.5, y1=68, line=dict(color="black", width=2))
+# Add pitch layout (green background)
+fig.add_shape(type="rect", x0=0, y0=0, x1=105, y1=68, line=dict(color="white", width=2), fillcolor="green", opacity=0.3)
+fig.add_shape(type="circle", x0=52.5 - 9.15, y0=34 - 9.15, x1=52.5 + 9.15, y1=34 + 9.15, line=dict(color="white", width=2))
+fig.add_shape(type="line", x0=52.5, y0=0, x1=52.5, y1=68, line=dict(color="white", width=2))
 
 # Add penalty areas
-fig.add_shape(type="rect", x0=0, y0=22.32, x1=16.5, y1=45.68, line=dict(color="black", width=2))
-fig.add_shape(type="rect", x0=105, y0=22.32, x1=88.5, y1=45.68, line=dict(color="black", width=2))
+fig.add_shape(type="rect", x0=0, y0=22.32, x1=16.5, y1=45.68, line=dict(color="white", width=2))
+fig.add_shape(type="rect", x0=105, y0=22.32, x1=88.5, y1=45.68, line=dict(color="white", width=2))
 
-# Add player positions
+# Filter only starting 11 players
+starting_11_data = filtered_data[filtered_data['status'] == 'Starting 11']
+
+# Add player positions for starting 11
 fig.add_trace(go.Scatter(
-    x=filtered_data["x_position"],
-    y=filtered_data["y_position"],
+    x=starting_11_data["x_position"],
+    y=starting_11_data["y_position"],
     mode="markers+text",
-    marker=dict(size=10, color="blue"),
-    text=filtered_data["short_name"],  # Display player name
+    marker=dict(size=12, color="blue"),
+    text=starting_11_data["short_name"],  # Player names
     textposition="top center",
     hovertemplate=(
         "<b>%{text}</b><br>" +
         "Position: %{customdata[0]}<br>" +
-        "Status: %{customdata[1]}<br>" +
-        "Market Value: €%{customdata[2]:,.2f}<br>" +
+        "Market Value: €%{customdata[1]:,.2f}<br>" +
         "<extra></extra>"
     ),
-    customdata=filtered_data[["general_position", "status", "value_eur"]].values  # Add additional info
+    customdata=starting_11_data[["general_position", "value_eur"]].values
 ))
 
-# Update layout
+# Update layout to make the pitch green
 fig.update_layout(
-    title="Interactive Bristol City FC Pitch",
+    title="Bristol City FC Starting 11",
     xaxis=dict(visible=False),
     yaxis=dict(visible=False),
     height=500,
     width=800,
+    plot_bgcolor="green",  # Green pitch background
     showlegend=False
 )
 
-# Render the pitch in Streamlit
+# Display the pitch
 st.plotly_chart(fig)
+
+# Bench Players Visual
+st.markdown("### Bench Players")
+bench_data = filtered_data[filtered_data['status'] == 'Bench']
+
+# Display all columns for bench players
+st.dataframe(bench_data.sort_values(by="value_eur", ascending=False))
+
 
 
 # Player Stats Table
