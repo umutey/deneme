@@ -128,7 +128,7 @@ fig = px.scatter_geo(
 )
 st.plotly_chart(fig)
 
-# Football Pitch and Player Positions with Images
+# Football Pitch and Player Positions
 st.markdown("### Player Positions on the Pitch")
 
 # Create the pitch
@@ -146,64 +146,32 @@ fig.add_shape(type="rect", x0=105, y0=22.32, x1=88.5, y1=45.68, line=dict(color=
 # Filter only starting 11 players
 starting_11_data = filtered_data[filtered_data['status'] == 'Starting 11']
 
-# Add player positions for starting 11 with clickable names
+# Add player positions for starting 11
 fig.add_trace(go.Scatter(
     x=starting_11_data["x_position"],
     y=starting_11_data["y_position"],
     mode="markers+text",
-    marker=dict(size=15, color="rgba(0,0,255,0.5)"),  # Semi-transparent circles
+    marker=dict(size=12, color="blue"),
     text=starting_11_data["short_name"],  # Player names
-    textposition="bottom center",
+    textposition="top center",
     hovertemplate=(
         "<b>%{text}</b><br>" +
         "Position: %{customdata[0]}<br>" +
         "Market Value: €%{customdata[1]:,.2f}<br>" +
-        "Nationality: %{customdata[2]}<br>" +
         "<extra></extra>"
     ),
-    customdata=starting_11_data[["general_position", "value_eur", "nationality_name"]].values
+    customdata=starting_11_data[["general_position", "value_eur"]].values
 ))
-
-# Add player images to the pitch
-for _, player in starting_11_data.iterrows():
-    fig.add_layout_image(
-        dict(
-            source=get_player_image(player["player_id"]),
-            x=player["x_position"],  # Player's X-coordinate
-            y=player["y_position"],  # Player's Y-coordinate
-            xref="x",
-            yref="y",
-            sizex=8,  # Adjust size for better fit
-            sizey=8,
-            xanchor="center",
-            yanchor="middle",
-            layer="above"  # Ensure it's above the pitch elements
-        )
-    )
-
-
+# Update layout to make the pitch green
 fig.update_layout(
-    images=[dict(
-        source=get_player_image(player["player_id"]),
-        x=player["x_position"],
-        y=player["y_position"],
-        xref="x",
-        yref="y",
-        sizex=4,
-        sizey=4,
-        xanchor="center",
-        yanchor="middle",
-        layer="above"
-    )],
     title="Bristol City FC Starting 11",
-    xaxis=dict(visible=False, range=[0, 105]),  # Ensure range covers pitch dimensions
-    yaxis=dict(visible=False, range=[0, 68]),
+    xaxis=dict(visible=False),
+    yaxis=dict(visible=False),
     height=500,
     width=800,
-    plot_bgcolor="green",
+    plot_bgcolor="green",  # Green pitch background
     showlegend=False
 )
-
 
 # Display the pitch
 st.plotly_chart(fig)
