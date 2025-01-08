@@ -29,6 +29,11 @@ def get_player_image(player_id):
         base64_data = base64.b64encode(img_file.read()).decode("utf-8")
     return f"data:image/jpeg;base64,{base64_data}"
 
+for _, player in starting_11_data.iterrows():
+    player_image = get_player_image(player["player_id"])
+    if not player_image:
+        st.write(f"Missing image for player ID: {player['player_id']}")
+
 
 # Load Data
 starting_11 = pd.read_csv("bristol_city_starting_11.csv")
