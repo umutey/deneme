@@ -47,16 +47,18 @@ st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round
 
 # Nationality Visualization on Map
 st.markdown("### Player Nationalities")
+# Nationality Visualization on Map
+st.markdown("### Player Nationalities")
 import requests
 import json
 
 # Load GeoJSON data from an online source
 url = "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
-response = requests.get(url)
-world = gpd.read_file(json.loads(response.text))
+world = gpd.read_file(url)  # Directly pass the URL to read GeoJSON data
 
+# Merge player data with world GeoJSON data (if needed for further customization)
 fig = px.scatter_geo(
-    geo_df, 
+    filtered_data,  # Corrected the data source to use filtered_data directly
     lat="latitude", 
     lon="longitude", 
     hover_name="short_name",
@@ -65,6 +67,7 @@ fig = px.scatter_geo(
     projection="natural earth"
 )
 st.plotly_chart(fig)
+
 
 # Football Pitch and Player Positions
 st.markdown("### Player Positions on the Pitch")
