@@ -173,23 +173,23 @@ fig.add_trace(go.Scatter(
     customdata=starting_11_data[["general_position", "value_eur", "nationality_name"]].values
 ))
 
-# Add player images
+# Add player images to the pitch
 for _, player in starting_11_data.iterrows():
-    player_image_url = f"Bristol_City_Player_Pics/{player['player_id']}.jpg"  # Use the player's ID for the image filename
     fig.add_layout_image(
         dict(
             source=get_player_image(player["player_id"]),
-            x=player["x_position"] - 2,  # Adjust x position to center image
-            y=player["y_position"] + 2,  # Adjust y position to center image
+            x=player["x_position"],  # Player's X-coordinate
+            y=player["y_position"],  # Player's Y-coordinate
             xref="x",
             yref="y",
-            sizex=4,
-            sizey=4,
+            sizex=8,  # Adjust size for better fit
+            sizey=8,
             xanchor="center",
             yanchor="middle",
-            layer="above"
+            layer="above"  # Ensure it's above the pitch elements
         )
     )
+
 
 fig.update_layout(
     images=[dict(
@@ -205,8 +205,8 @@ fig.update_layout(
         layer="above"
     )],
     title="Bristol City FC Starting 11",
-    xaxis=dict(visible=False),
-    yaxis=dict(visible=False),
+    xaxis=dict(visible=False, range=[0, 105]),  # Ensure range covers pitch dimensions
+    yaxis=dict(visible=False, range=[0, 68]),
     height=500,
     width=800,
     plot_bgcolor="green",
