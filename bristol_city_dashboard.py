@@ -81,12 +81,12 @@ filtered_data["x_position"], filtered_data["y_position"] = zip(
 )
 
 # Debug: Check the generated positions
-st.write("Player positions with coordinates:", filtered_data[["short_name", "player_positions", "x_position", "y_position"]].head())
+#st.write("Player positions with coordinates:", filtered_data[["short_name", "player_positions", "x_position", "y_position"]].head())
 
 
 # Main Dashboard
-st.title("Bristol City FC Team Dashboard")
 st.image("Bristol_City_Logo.png", width=100)
+st.title("Bristol City FC Team Dashboard")
 st.markdown("### Overview")
 st.metric("Total Players", len(filtered_data))
 st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round(2))
