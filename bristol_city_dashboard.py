@@ -112,30 +112,50 @@ st.plotly_chart(fig)
 
 # Football Pitch and Player Positions
 st.markdown("### Player Positions on the Pitch")
-fig, ax = plt.subplots(figsize=(10, 7))
 
-# Draw the pitch
-def draw_pitch(ax=None):
-    pitch = Rectangle([0, 0], width=105, height=68, fill=False, color="black")
-    center_circle = Circle([52.5, 34], radius=9.15, fill=False, color="black")
-    center_spot = Circle([52.5, 34], radius=0.37, fill=True, color="black")
-    penalty_arc_left = Arc([11, 34], height=18.3, width=18.3, angle=0, theta1=308, theta2=52, color="black")
-    penalty_arc_right = Arc([94, 34], height=18.3, width=18.3, angle=0, theta1=128, theta2=232, color="black")
-    
-    for element in [pitch, center_circle, center_spot, penalty_arc_left, penalty_arc_right]:
-        ax.add_patch(element)
+# Create the pitch
+fig = go.Figure()
 
-    ax.set_xlim(-5, 110)
-    ax.set_ylim(-5, 73)
-    ax.axis("off")
+# Add pitch layout
+fig.add_shape(type="rect", x0=0, y0=0, x1=105, y1=68, line=dict(color="black", width=2))
+fig.add_shape(type="circle", x0=52.5 - 9.15, y0=34 - 9.15, x1=52.5 + 9.15, y1=34 + 9.15, line=dict(color="black", width=2))
+fig.add_shape(type="line", x0=52.5, y0=0, x1=52.5, y1=68, line=dict(color="black", width=2))
 
-draw_pitch(ax)
+# Add penalty areas
+fig.add_shape(type="rect", x0=0, y0=22.32, x1=16.5, y1=45.68, line=dict(color="black", width=2))
+fig.add_shape(type="rect", x0=105, y0=22.32, x1=88.5, y1=45.68, line=dict(color="black", width=2))
 
-# Plot players
-for _, row in filtered_data.iterrows():
-    ax.text(row["x_position"], row["y_position"], row["short_name"], fontsize=8, ha='center', color="blue")
+# Add player positions
+fig.add_trace(go.Scatter(
+    x=filtered_data["x_position"],
+    y=filtered_data["y_position"],
+    mode="markers+text",
+    marker=dict(size=10, color="blue"),
+    text=filtered_data["short_name"],  # Display player name
+    textposition="top center",
+    hovertemplate=(
+        "<b>%{text}</b><br>" +
+        "Position: %{customdata[0]}<br>" +
+        "Status: %{customdata[1]}<br>" +
+        "Market Value: €%{customdata[2]:,.2f}<br>" +
+        "<extra></extra>"
+    ),
+    customdata=filtered_data[["general_position", "status", "value_eur"]].values  # Add additional info
+))
 
-st.pyplot(fig)
+# Update layout
+fig.update_layout(
+    title="Interactive Bristol City FC Pitch",
+    xaxis=dict(visible=False),
+    yaxis=dict(visible=False),
+    height=500,
+    width=800,
+    showlegend=False
+)
+
+# Render the pitch in Streamlit
+st.plotly_chart(fig)
+
 
 # Player Stats Table
 st.markdown("### Player Stats")
