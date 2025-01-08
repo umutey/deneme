@@ -186,7 +186,7 @@ player_2 = st.selectbox("Select Second Player", player_options, index=1)
 comparison_data = filtered_data[filtered_data["short_name"].isin([player_1, player_2])]
 if len(comparison_data) == 2:
     fig = px.bar(
-        comparison_data.melt(id_vars="short_name", value_vars=["pace", "shooting", "passing"]),
+        comparison_data.melt(id_vars="short_name", value_vars=["pace", "shooting", "passing","defending", "physic"]),
         x="variable", 
         y="value", 
         color="short_name", 
