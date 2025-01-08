@@ -301,7 +301,7 @@ player_card = filtered_data[filtered_data["short_name"] == player_name].iloc[0]
 
 # Load and display the player's image
 player_image = get_player_image(player_card["player_id"])  # Use player_id for the image filename
-st.image(player_image, use_column_width=True)
+st.image(player_image, use_container_width=True)
 
 # Display player details
 st.write(f"**Name:** {player_card['short_name']}")
