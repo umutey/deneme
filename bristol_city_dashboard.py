@@ -46,12 +46,14 @@ filtered_data = players_data[
     (players_data["nationality_name"].isin(selected_nationality))
 ]
 
+#from itertools import cycle
+
 # Define position coordinates for a 3-4-3 formation
 position_coordinates = {
-    "GK": (5, 34),
-    "CB": [(25, 20), (25, 34), (25, 48)],
-    "MID": [(50, 10), (50, 24), (50, 44), (50, 58)],
-    "FWD": [(75, 24), (75, 34), (75, 44)]
+    "GK": cycle([(5, 34)]),  # Goalkeeper
+    "CB": cycle([(25, 20), (25, 34), (25, 48)]),  # Center Backs
+    "MID": cycle([(50, 10), (50, 24), (50, 44), (50, 58)]),  # Midfielders
+    "FWD": cycle([(75, 24), (75, 34), (75, 44)])  # Forwards
 }
 
 # Assign coordinates to players based on their general position
@@ -59,13 +61,13 @@ def get_position_coordinates(player_position):
     # Extract primary position
     primary_position = player_position.split(',')[0].strip()
     if primary_position == "GK":
-        return position_coordinates["GK"]
+        return next(position_coordinates["GK"])
     elif primary_position in ["ST", "LW", "RW", "CF"]:
-        return position_coordinates["FWD"].pop(0)  # Assign and remove the first available FWD spot
+        return next(position_coordinates["FWD"])
     elif primary_position in ["CB", "LB", "RB"]:
-        return position_coordinates["CB"].pop(0)  # Assign and remove the first available CB spot
+        return next(position_coordinates["CB"])
     elif primary_position in ["CM", "CDM", "CAM", "LM", "RM"]:
-        return position_coordinates["MID"].pop(0)  # Assign and remove the first available MID spot
+        return next(position_coordinates["MID"])
     else:
         return (0, 0)  # Default position for undefined roles
 
