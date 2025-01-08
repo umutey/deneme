@@ -174,3 +174,78 @@ st.dataframe(
         ["short_name", "general_position", "status", "nationality_name", "value_eur", "pace", "shooting"]
     ].sort_values(by="value_eur", ascending=False)
 )
+
+
+# Player Comparison
+st.markdown("### Compare Two Players")
+player_options = filtered_data["short_name"].unique()
+
+player_1 = st.selectbox("Select First Player", player_options, index=0)
+player_2 = st.selectbox("Select Second Player", player_options, index=1)
+
+comparison_data = filtered_data[filtered_data["short_name"].isin([player_1, player_2])]
+if len(comparison_data) == 2:
+    fig = px.bar(
+        comparison_data.melt(id_vars="short_name", value_vars=["pace", "shooting", "passing"]),
+        x="variable", 
+        y="value", 
+        color="short_name", 
+        barmode="group",
+        title="Player Attribute Comparison",
+        labels={"variable": "Attribute", "value": "Score"},
+    )
+    st.plotly_chart(fig)
+
+# Age Distribution
+st.markdown("### Age Distribution")
+fig = px.histogram(filtered_data, x="age", nbins=10, title="Age Distribution of Players")
+st.plotly_chart(fig)
+
+
+# Best Player by Position
+st.markdown("### Best Player by Position")
+best_players = filtered_data.loc[filtered_data.groupby("general_position")["overall"].idxmax()]
+st.dataframe(best_players[["short_name", "general_position", "value_eur", "overall"]])
+
+
+# Nationality Distribution
+st.markdown("### Nationality Distribution")
+nationality_counts = filtered_data["nationality_name"].value_counts()
+fig = px.pie(nationality_counts, values=nationality_counts, names=nationality_counts.index, title="Nationality Distribution")
+st.plotly_chart(fig)
+
+
+# Attribute Heatmap
+st.markdown("### Team Attribute Heatmap")
+attribute_cols = ["pace", "shooting", "passing", "dribbling", "defending", "physic"]
+attribute_data = filtered_data[attribute_cols]
+fig = px.imshow(attribute_data.corr(), text_auto=True, title="Correlation Between Attributes")
+st.plotly_chart(fig)
+
+
+# Salary vs. Performance
+st.markdown("### Salary vs. Performance")
+fig = px.scatter(
+    filtered_data, 
+    x="wage_eur", 
+    y="overall", 
+    size="value_eur", 
+    color="general_position",
+    hover_name="short_name",
+    title="Salary vs. Performance",
+    labels={"wage_eur": "Weekly Salary (€)", "overall": "Overall Rating"}
+)
+st.plotly_chart(fig)
+
+
+# Player Card
+st.markdown("### Player Card")
+player_name = st.selectbox("Select a Player", filtered_data["short_name"].unique())
+player_card = filtered_data[filtered_data["short_name"] == player_name].iloc[0]
+st.write(f"**Name:** {player_card['short_name']}")
+st.write(f"**Nationality:** {player_card['nationality_name']}")
+st.write(f"**Position:** {player_card['general_position']}")
+st.write(f"**Market Value (€):** {player_card['value_eur']:,}")
+st.write(f"**Wage (€):** {player_card['wage_eur']:,}")
+st.write(f"**Attributes:**")
+st.bar_chart(player_card[["pace", "shooting", "passing", "dribbling", "defending", "physic"]])
