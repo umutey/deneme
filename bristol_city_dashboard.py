@@ -9,7 +9,7 @@ from plotly import graph_objects as go
 from PIL import Image
 import os
 
-'''# Function to load player images
+# Function to load player images
 def get_player_image(player_id, image_dir="Bristol_City_Player_Pics"):
     """
     Retrieve player image based on player_id.
@@ -20,20 +20,7 @@ def get_player_image(player_id, image_dir="Bristol_City_Player_Pics"):
         return Image.open(image_path)
     else:
         # Return a placeholder image if the player's image is missing
-        return Image.open("placeholder.jpg")  # Ensure "placeholder.jpg" exists '''
-import base64
-
-def get_player_image(player_id):
-    image_path = f"./Bristol_City_Player_Pics/{player_id}.jpg"
-    with open(image_path, "rb") as img_file:
-        base64_data = base64.b64encode(img_file.read()).decode("utf-8")
-    return f"data:image/jpeg;base64,{base64_data}"
-
-for _, player in starting_11.iterrows():
-    player_image = get_player_image(player["player_id"])
-    if not player_image:
-        st.write(f"Missing image for player ID: {player['player_id']}")
-
+        return Image.open("placeholder.jpg")  # Ensure "placeholder.jpg" exists 
 
 # Load Data
 starting_11 = pd.read_csv("bristol_city_starting_11.csv")
@@ -76,7 +63,6 @@ filtered_data = players_data[
     (players_data["general_position"].isin(selected_position)) &
     (players_data["nationality_name"].isin(selected_nationality))
 ]
-
 
 
 from itertools import cycle
@@ -302,18 +288,7 @@ fig = px.scatter(
 )
 st.plotly_chart(fig)
 
-'''
-# Player Card
-st.markdown("### Player Card")
-player_name = st.selectbox("Select a Player", filtered_data["short_name"].unique())
-player_card = filtered_data[filtered_data["short_name"] == player_name].iloc[0]
-st.write(f"**Name:** {player_card['short_name']}")
-st.write(f"**Nationality:** {player_card['nationality_name']}")
-st.write(f"**Position:** {player_card['general_position']}")
-st.write(f"**Market Value (€):** {player_card['value_eur']:,}")
-st.write(f"**Wage (€):** {player_card['wage_eur']:,}")
-st.write(f"**Attributes:**")
-st.bar_chart(player_card[["pace", "shooting", "passing", "dribbling", "defending", "physic"]])'''
+
 
 # Player Card
 st.markdown("### Player Card")
