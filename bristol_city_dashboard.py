@@ -106,6 +106,23 @@ st.markdown("### Overview")
 st.metric("Total Players", len(filtered_data))
 st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round(2))
 
+# Player Card
+st.markdown("### Player Card")
+player_name = st.selectbox("Select a Player", filtered_data["short_name"].unique())
+player_card = filtered_data[filtered_data["short_name"] == player_name].iloc[0]
+
+# Load and display the player's image
+player_image = get_player_image(player_card["player_id"])  # Use player_id for the image filename
+st.image(player_image, use_container_width=False)
+
+# Display player details
+st.write(f"**Name:** {player_card['short_name']}")
+st.write(f"**Nationality:** {player_card['nationality_name']}")
+st.write(f"**Position:** {player_card['general_position']}")
+st.write(f"**Market Value (€):** {player_card['value_eur']:,}")
+st.write(f"**Weekly Wage (€):** {player_card['wage_eur']:,}")
+st.write(f"**Attributes:**")
+st.bar_chart(player_card[["pace", "shooting", "passing", "dribbling", "defending", "physic"]])
 
 # Nationality Visualization on Map
 st.markdown("### Player Nationalities")
@@ -258,21 +275,5 @@ st.plotly_chart(fig)
 
 
 
-# Player Card
-st.markdown("### Player Card")
-player_name = st.selectbox("Select a Player", filtered_data["short_name"].unique())
-player_card = filtered_data[filtered_data["short_name"] == player_name].iloc[0]
 
-# Load and display the player's image
-player_image = get_player_image(player_card["player_id"])  # Use player_id for the image filename
-st.image(player_image, use_container_width=False)
-
-# Display player details
-st.write(f"**Name:** {player_card['short_name']}")
-st.write(f"**Nationality:** {player_card['nationality_name']}")
-st.write(f"**Position:** {player_card['general_position']}")
-st.write(f"**Market Value (€):** {player_card['value_eur']:,}")
-st.write(f"**Weekly Wage (€):** {player_card['wage_eur']:,}")
-st.write(f"**Attributes:**")
-st.bar_chart(player_card[["pace", "shooting", "passing", "dribbling", "defending", "physic"]])
 
