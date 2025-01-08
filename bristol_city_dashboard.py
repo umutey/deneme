@@ -304,7 +304,7 @@ st.write(f"**Name:** {player_card['short_name']}")
 st.write(f"**Nationality:** {player_card['nationality_name']}")
 st.write(f"**Position:** {player_card['general_position']}")
 st.write(f"**Market Value (€):** {player_card['value_eur']:,}")
-st.write(f"**Wage (€):** {player_card['wage_eur']:,}")
+st.write(f"**Weekly Wage (€):** {player_card['wage_eur']:,}")
 st.write(f"**Attributes:**")
 st.bar_chart(player_card[["pace", "shooting", "passing", "dribbling", "defending", "physic"]])
 
