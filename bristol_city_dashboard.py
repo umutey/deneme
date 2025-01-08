@@ -6,6 +6,23 @@ from matplotlib.patches import Circle, Rectangle, Arc
 import matplotlib.pyplot as plt
 from plotly import graph_objects as go
 
+from PIL import Image
+import os
+
+# Function to load player images
+def get_player_image(player_id, image_dir="Bristol_City_Player_Pics"):
+    """
+    Retrieve player image based on player_id.
+    If the image is not found, return a placeholder.
+    """
+    image_path = os.path.join(image_dir, f"{player_id}.jpg")
+    if os.path.exists(image_path):
+        return Image.open(image_path)
+    else:
+        # Return a placeholder image if the player's image is missing
+        return Image.open("placeholder.jpg")  # Ensure "placeholder.jpg" exists
+
+
 # Load Data
 starting_11 = pd.read_csv("bristol_city_starting_11.csv")
 bench = pd.read_csv("bristol_city_bench.csv")
@@ -130,7 +147,7 @@ fig.add_shape(type="rect", x0=105, y0=22.32, x1=88.5, y1=45.68, line=dict(color=
 
 # Filter only starting 11 players
 starting_11_data = filtered_data[filtered_data['status'] == 'Starting 11']
-
+'''
 # Add player positions for starting 11
 fig.add_trace(go.Scatter(
     x=starting_11_data["x_position"],
@@ -146,7 +163,30 @@ fig.add_trace(go.Scatter(
         "<extra></extra>"
     ),
     customdata=starting_11_data[["general_position", "value_eur"]].values
+))'''
+
+# Add player positions for starting 11 with images
+fig.add_trace(go.Scatter(
+    x=starting_11_data["x_position"],
+    y=starting_11_data["y_position"],
+    mode="markers+text",
+    marker=dict(size=50, opacity=0.6),  # Customize marker for better visibility
+    text=starting_11_data["short_name"],  # Player names
+    textposition="top center",
+    hovertemplate=(
+        "<b>%{text}</b><br>" +
+        "Position: %{customdata[0]}<br>" +
+        "Market Value: €%{customdata[1]:,.2f}<br>" +
+        "<extra></extra>"
+    ),
+    customdata=starting_11_data[["general_position", "value_eur"]].values
 ))
+
+# Display player pictures for Starting 11
+for _, player in starting_11_data.iterrows():
+    player_image = get_player_image(player["player_id"])
+    st.image(player_image, caption=player["short_name"], width=80)
+
 
 # Update layout to make the pitch green
 fig.update_layout(
@@ -241,7 +281,7 @@ fig = px.scatter(
 )
 st.plotly_chart(fig)
 
-
+'''
 # Player Card
 st.markdown("### Player Card")
 player_name = st.selectbox("Select a Player", filtered_data["short_name"].unique())
@@ -252,4 +292,23 @@ st.write(f"**Position:** {player_card['general_position']}")
 st.write(f"**Market Value (€):** {player_card['value_eur']:,}")
 st.write(f"**Wage (€):** {player_card['wage_eur']:,}")
 st.write(f"**Attributes:**")
+st.bar_chart(player_card[["pace", "shooting", "passing", "dribbling", "defending", "physic"]])'''
+
+# Player Card
+st.markdown("### Player Card")
+player_name = st.selectbox("Select a Player", filtered_data["short_name"].unique())
+player_card = filtered_data[filtered_data["short_name"] == player_name].iloc[0]
+
+# Load and display the player's image
+player_image = get_player_image(player_card["player_id"])  # Use player_id for the image filename
+st.image(player_image, caption=player_card["short_name"], use_column_width=True)
+
+# Display player details
+st.write(f"**Name:** {player_card['short_name']}")
+st.write(f"**Nationality:** {player_card['nationality_name']}")
+st.write(f"**Position:** {player_card['general_position']}")
+st.write(f"**Market Value (€):** {player_card['value_eur']:,}")
+st.write(f"**Wage (€):** {player_card['wage_eur']:,}")
+st.write(f"**Attributes:**")
 st.bar_chart(player_card[["pace", "shooting", "passing", "dribbling", "defending", "physic"]])
+
