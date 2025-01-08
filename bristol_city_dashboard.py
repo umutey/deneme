@@ -17,6 +17,7 @@ players_data = pd.concat([starting_11, bench], ignore_index=True)
 
 # Sidebar Filters
 st.sidebar.title("Bristol City FC Dashboard")
+st.image("Bristol_City_Logo.png", width=100)
 selected_status = st.sidebar.multiselect(
     "Select Group", 
     players_data["status"].unique(), 
