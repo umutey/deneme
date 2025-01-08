@@ -39,6 +39,45 @@ filtered_data = players_data[
     (players_data["nationality_name"].isin(selected_nationality))
 ]
 
+# Filter Data
+filtered_data = players_data[
+    (players_data["status"].isin(selected_status)) &
+    (players_data["general_position"].isin(selected_position)) &
+    (players_data["nationality_name"].isin(selected_nationality))
+]
+
+# Define position coordinates for a 3-4-3 formation
+position_coordinates = {
+    "GK": (5, 34),
+    "CB": [(25, 20), (25, 34), (25, 48)],
+    "MID": [(50, 10), (50, 24), (50, 44), (50, 58)],
+    "FWD": [(75, 24), (75, 34), (75, 44)]
+}
+
+# Assign coordinates to players based on their general position
+def get_position_coordinates(player_position):
+    # Extract primary position
+    primary_position = player_position.split(',')[0].strip()
+    if primary_position == "GK":
+        return position_coordinates["GK"]
+    elif primary_position in ["ST", "LW", "RW", "CF"]:
+        return position_coordinates["FWD"].pop(0)  # Assign and remove the first available FWD spot
+    elif primary_position in ["CB", "LB", "RB"]:
+        return position_coordinates["CB"].pop(0)  # Assign and remove the first available CB spot
+    elif primary_position in ["CM", "CDM", "CAM", "LM", "RM"]:
+        return position_coordinates["MID"].pop(0)  # Assign and remove the first available MID spot
+    else:
+        return (0, 0)  # Default position for undefined roles
+
+# Apply the mapping to create new columns for x and y coordinates
+filtered_data["x_position"], filtered_data["y_position"] = zip(
+    *filtered_data["player_positions"].apply(get_position_coordinates)
+)
+
+# Debug: Check the generated positions
+st.write("Player positions with coordinates:", filtered_data[["short_name", "player_positions", "x_position", "y_position"]].head())
+
+
 # Main Dashboard
 st.title("Bristol City FC Team Dashboard")
 st.markdown("### Overview")
@@ -90,9 +129,9 @@ def draw_pitch(ax=None):
 
 draw_pitch(ax)
 
-# Plot player positions
+# Plot players
 for _, row in filtered_data.iterrows():
-    ax.text(row["ls"], row["st"], row["short_name"], fontsize=8, ha='center', color="blue")
+    ax.text(row["x_position"], row["y_position"], row["short_name"], fontsize=8, ha='center', color="blue")
 
 st.pyplot(fig)
 
