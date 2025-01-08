@@ -9,7 +9,7 @@ from plotly import graph_objects as go
 from PIL import Image
 import os
 
-# Function to load player images
+'''# Function to load player images
 def get_player_image(player_id, image_dir="Bristol_City_Player_Pics"):
     """
     Retrieve player image based on player_id.
@@ -20,7 +20,14 @@ def get_player_image(player_id, image_dir="Bristol_City_Player_Pics"):
         return Image.open(image_path)
     else:
         # Return a placeholder image if the player's image is missing
-        return Image.open("placeholder.jpg")  # Ensure "placeholder.jpg" exists
+        return Image.open("placeholder.jpg")  # Ensure "placeholder.jpg" exists '''
+import base64
+
+def get_player_image(player_id):
+    image_path = f"./Bristol_City_Player_Pics/{player_id}.jpg"
+    with open(image_path, "rb") as img_file:
+        base64_data = base64.b64encode(img_file.read()).decode("utf-8")
+    return f"data:image/jpeg;base64,{base64_data}"
 
 
 # Load Data
@@ -171,7 +178,7 @@ for _, player in starting_11_data.iterrows():
     player_image_url = f"Bristol_City_Player_Pics/{player['player_id']}.jpg"  # Use the player's ID for the image filename
     fig.add_layout_image(
         dict(
-            source=player_image_url,
+            source=get_player_image(player["player_id"]),
             x=player["x_position"] - 2,  # Adjust x position to center image
             y=player["y_position"] + 2,  # Adjust y position to center image
             xref="x",
@@ -184,16 +191,28 @@ for _, player in starting_11_data.iterrows():
         )
     )
 
-# Update layout to make the pitch green
 fig.update_layout(
+    images=[dict(
+        source=get_player_image(player["player_id"]),
+        x=player["x_position"],
+        y=player["y_position"],
+        xref="x",
+        yref="y",
+        sizex=4,
+        sizey=4,
+        xanchor="center",
+        yanchor="middle",
+        layer="above"
+    )],
     title="Bristol City FC Starting 11",
     xaxis=dict(visible=False),
     yaxis=dict(visible=False),
     height=500,
     width=800,
-    plot_bgcolor="green",  # Green pitch background
+    plot_bgcolor="green",
     showlegend=False
 )
+
 
 # Display the pitch
 st.plotly_chart(fig)
