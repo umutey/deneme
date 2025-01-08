@@ -4,6 +4,7 @@ import plotly.express as px
 import geopandas as gpd
 from matplotlib.patches import Circle, Rectangle, Arc
 import matplotlib.pyplot as plt
+from plotly import graph_objects as go
 
 # Load Data
 starting_11 = pd.read_csv("bristol_city_starting_11.csv")
