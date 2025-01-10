@@ -103,11 +103,20 @@ filtered_data["x_position"], filtered_data["y_position"] = zip(
 st.image("Bristol_City_Logo.png", width=100)
 st.title("Bristol City FC Team Dashboard")
 st.markdown("### Overview")
-st.metric("Total Players", len(filtered_data))
-st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round(2))
-st.metric("Average Weekly Wage (€M)", filtered_data["wage_eur"].mean().round(2))
-st.metric("Average Age", filtered_data["age"].mean().round(1))
-st.metric("Total Team Value (€M) ", filtered_data["value_eur"].sum().round(2))
+
+# Compute Metrics with Formatted Values
+total_players = len(filtered_data)
+avg_market_value = f"{filtered_data['value_eur'].mean() / 1e6:,.2f}M"
+avg_weekly_wage = f"{filtered_data['wage_eur'].mean() / 1e6:,.2f}M"
+avg_age = f"{filtered_data['age'].mean():.1f}"
+total_team_value = f"{filtered_data['value_eur'].sum() / 1e6:,.2f}M"
+
+# Display Metrics
+st.metric("Total Players", total_players)
+st.metric("Average Market Value (€M)", avg_market_value)
+st.metric("Average Weekly Wage (€M)", avg_weekly_wage)
+st.metric("Average Age", avg_age)
+st.metric("Total Team Value (€M)", total_team_value)
 
 # Player Card
 st.markdown("### Player Card")
