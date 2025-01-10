@@ -105,6 +105,9 @@ st.title("Bristol City FC Team Dashboard")
 st.markdown("### Overview")
 st.metric("Total Players", len(filtered_data))
 st.metric("Average Market Value (€M)", filtered_data["value_eur"].mean().round(2))
+st.metric("Average Weekly Wage (€M)", filtered_data["wage_eur"].mean().round(2))
+st.metric("Average Age", filtered_data["age"].mean().round(1))
+st.metric("Total Team Value (€M) ", filtered_data["age"].mean().round(1))
 
 # Player Card
 st.markdown("### Player Card")
