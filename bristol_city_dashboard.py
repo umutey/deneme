@@ -225,24 +225,57 @@ st.dataframe(
 
 
 # Player Comparison
+# Player Comparison
 st.markdown("### Compare Two Players")
-player_options = filtered_data["short_name"].unique()
 
+# Select players for comparison
+player_options = filtered_data["short_name"].unique()
 player_1 = st.selectbox("Select First Player", player_options, index=0)
 player_2 = st.selectbox("Select Second Player", player_options, index=1)
 
-comparison_data = filtered_data[filtered_data["short_name"].isin([player_1, player_2])]
-if len(comparison_data) == 2:
-    fig = px.bar(
-        comparison_data.melt(id_vars="short_name", value_vars=["pace", "shooting", "passing","defending", "physic"]),
-        x="variable", 
-        y="value", 
-        color="short_name", 
-        barmode="group",
-        title="Player Attribute Comparison",
-        labels={"variable": "Attribute", "value": "Score"},
-    )
-    st.plotly_chart(fig)
+# Attributes for comparison
+attributes = ["pace", "shooting", "passing", "dribbling", "defending", "physic"]
+
+# Get data for the selected players
+player_1_data = filtered_data[filtered_data["short_name"] == player_1][attributes].iloc[0]
+player_2_data = filtered_data[filtered_data["short_name"] == player_2][attributes].iloc[0]
+
+# Create radar chart
+import plotly.graph_objects as go
+
+fig = go.Figure()
+
+# Add player 1 data
+fig.add_trace(go.Scatterpolar(
+    r=player_1_data.values,
+    theta=attributes,
+    fill='toself',
+    name=player_1
+))
+
+# Add player 2 data
+fig.add_trace(go.Scatterpolar(
+    r=player_2_data.values,
+    theta=attributes,
+    fill='toself',
+    name=player_2
+))
+
+# Update layout
+fig.update_layout(
+    polar=dict(
+        radialaxis=dict(
+            visible=True,
+            range=[0, 100]  # Assuming attribute values are in the range 0-100
+        )
+    ),
+    title="Player Attribute Comparison",
+    showlegend=True
+)
+
+# Display radar chart
+st.plotly_chart(fig)
+
 
 # Age Distribution
 st.markdown("### Age Distribution")
