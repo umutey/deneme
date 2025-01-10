@@ -225,7 +225,6 @@ st.dataframe(
 
 
 # Player Comparison
-# Player Comparison
 st.markdown("### Compare Two Players")
 
 # Select players for comparison
@@ -245,20 +244,24 @@ import plotly.graph_objects as go
 
 fig = go.Figure()
 
-# Add player 1 data
+# Add player 1 data with color-blind-friendly color
 fig.add_trace(go.Scatterpolar(
     r=player_1_data.values,
     theta=attributes,
     fill='toself',
-    name=player_1
+    name=player_1,
+    line=dict(color='blue', dash='solid'),  # Blue solid line
+    fillcolor='rgba(0, 112, 255, 0.3)'  # Semi-transparent blue fill
 ))
 
-# Add player 2 data
+# Add player 2 data with color-blind-friendly color
 fig.add_trace(go.Scatterpolar(
     r=player_2_data.values,
     theta=attributes,
     fill='toself',
-    name=player_2
+    name=player_2,
+    line=dict(color='orange', dash='dash'),  # Orange dashed line
+    fillcolor='rgba(255, 165, 0, 0.3)'  # Semi-transparent orange fill
 ))
 
 # Update layout
@@ -275,6 +278,7 @@ fig.update_layout(
 
 # Display radar chart
 st.plotly_chart(fig)
+
 
 
 # Age Distribution
