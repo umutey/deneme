@@ -134,7 +134,7 @@ st.write(f"**Position:** {player_card['general_position']}")
 st.write(f"**Market Value (€):** {player_card['value_eur']:,}")
 st.write(f"**Weekly Wage (€):** {player_card['wage_eur']:,}")
 st.write(f"**Attributes:**")
-st.bar_chart(player_card[["pace", "shooting", "passing", "dribbling", "defending", "physic", "mentality"]])
+st.bar_chart(player_card[["pace", "shooting", "passing", "dribbling", "defending", "physic"]])
 
 # Nationality Visualization on Map
 st.markdown("### Player Nationalities")
