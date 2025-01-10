@@ -239,7 +239,7 @@ st.dataframe(bench_data)
 
 
 # Player Comparison
-st.markdown("### Compare Two Players")
+st.markdown("### Two Player Attributes")
 
 # Select players for comparison
 player_options = filtered_data["short_name"].unique()
@@ -286,7 +286,6 @@ fig.update_layout(
             range=[0, 100]  # Assuming attribute values are in the range 0-100
         )
     ),
-    title="Player Attribute Comparison",
     showlegend=True
 )
 
