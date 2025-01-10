@@ -210,18 +210,32 @@ st.plotly_chart(fig)
 st.markdown("### Bench Players")
 bench_data = filtered_data[filtered_data['status'] == 'Bench']
 
-# Display all columns for bench players
-st.dataframe(bench_data.sort_values(by="value_eur", ascending=False))
+# Bench Players
+st.markdown("### Bench Players")
 
+# Columns to display
+bench_columns = ["short_name", "age", "height_cm", "weight_kg", "club_position", "value_eur", "wage_eur", "release_clause_eur"]
 
+# Filter and sort bench players data
+bench_data = filtered_data[filtered_data['status'] == 'Bench'][bench_columns]
 
-# Player Stats Table
-st.markdown("### Player Stats")
-st.dataframe(
-    filtered_data[
-        ["short_name", "general_position", "status", "nationality_name", "value_eur", "pace", "shooting"]
-    ].sort_values(by="value_eur", ascending=False)
-)
+# Rename columns for better readability
+bench_data.rename(columns={
+    "short_name": "Name",
+    "age": "Age",
+    "height_cm": "Height (cm)",
+    "weight_kg": "Weight (kg)",
+    "club_position": "Club Position",
+    "value_eur": "Value (€)",
+    "wage_eur": "Wage (€)",
+    "release_clause_eur": "Release Clause (€)"
+}, inplace=True)
+
+# Sort bench players by value
+bench_data = bench_data.sort_values(by="Value (€)", ascending=False)
+
+# Display the table
+st.dataframe(bench_data)
 
 
 # Player Comparison
@@ -280,34 +294,6 @@ fig.update_layout(
 st.plotly_chart(fig)
 
 
-
-# Age Distribution
-st.markdown("### Age Distribution")
-fig = px.histogram(filtered_data, x="age", nbins=10, title="Age Distribution of Players")
-st.plotly_chart(fig)
-
-
-# Best Player by Position
-st.markdown("### Best Player by Position")
-best_players = filtered_data.loc[filtered_data.groupby("general_position")["overall"].idxmax()]
-st.dataframe(best_players[["short_name", "general_position", "value_eur", "overall"]])
-
-
-# Nationality Distribution
-st.markdown("### Nationality Distribution")
-nationality_counts = filtered_data["nationality_name"].value_counts()
-fig = px.pie(nationality_counts, values=nationality_counts, names=nationality_counts.index, title="Nationality Distribution")
-st.plotly_chart(fig)
-
-
-# Attribute Heatmap
-st.markdown("### Team Attribute Heatmap")
-attribute_cols = ["pace", "shooting", "passing", "dribbling", "defending", "physic"]
-attribute_data = filtered_data[attribute_cols]
-fig = px.imshow(attribute_data.corr(), text_auto=True, title="Correlation Between Attributes")
-st.plotly_chart(fig)
-
-
 # Salary vs. Performance
 st.markdown("### Salary vs. Performance")
 fig = px.scatter(
@@ -321,6 +307,29 @@ fig = px.scatter(
     labels={"wage_eur": "Weekly Salary (€)", "overall": "Overall Rating"}
 )
 st.plotly_chart(fig)
+
+
+
+# Age Distribution
+st.markdown("### Age Distribution")
+fig = px.histogram(filtered_data, x="age", nbins=10, title="Age Distribution of Players")
+st.plotly_chart(fig)
+
+
+# Best Player by Position
+st.markdown("### Best Player by Position")
+best_players = filtered_data.loc[filtered_data.groupby("general_position")["overall"].idxmax()]
+st.dataframe(best_players[["short_name", "general_position", "value_eur", "overall"]])
+
+
+
+# Attribute Heatmap
+st.markdown("### Team Attribute Heatmap")
+attribute_cols = ["pace", "shooting", "passing", "dribbling", "defending", "physic"]
+attribute_data = filtered_data[attribute_cols]
+fig = px.imshow(attribute_data.corr(), text_auto=True, title="Correlation Between Attributes")
+st.plotly_chart(fig)
+
 
 
 
