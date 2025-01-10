@@ -107,7 +107,7 @@ st.markdown("### Overview")
 # Compute Metrics with Formatted Values
 total_players = len(filtered_data)
 avg_market_value = f"{filtered_data['value_eur'].mean() / 1e6:,.2f}M"
-avg_weekly_wage = f"{filtered_data['wage_eur'].mean():,}K"
+avg_weekly_wage = f"{filtered_data['wage_eur'].mean():,.0k}K"
 avg_age = f"{filtered_data['age'].mean():.1f}"
 total_team_value = f"{filtered_data['value_eur'].sum() / 1e6:,.2f}M"
 
