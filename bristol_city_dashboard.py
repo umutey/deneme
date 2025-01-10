@@ -210,9 +210,6 @@ st.plotly_chart(fig)
 st.markdown("### Bench Players")
 bench_data = filtered_data[filtered_data['status'] == 'Bench']
 
-# Bench Players
-st.markdown("### Bench Players")
-
 # Columns to display
 bench_columns = ["short_name", "age", "height_cm", "weight_kg", "club_position", "value_eur", "wage_eur", "release_clause_eur"]
 
@@ -233,6 +230,9 @@ bench_data.rename(columns={
 
 # Sort bench players by value
 bench_data = bench_data.sort_values(by="Value (€)", ascending=False)
+
+# Reset index to remove the first column
+bench_data.reset_index(drop=True, inplace=True)
 
 # Display the table
 st.dataframe(bench_data)
