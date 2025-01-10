@@ -303,7 +303,6 @@ fig = px.scatter(
     size="value_eur", 
     color="general_position",
     hover_name="short_name",
-    title="Salary vs. Performance",
     labels={"wage_eur": "Weekly Salary (€)", "overall": "Overall Rating"}
 )
 st.plotly_chart(fig)
@@ -312,7 +311,7 @@ st.plotly_chart(fig)
 
 # Age Distribution
 st.markdown("### Age Distribution")
-fig = px.histogram(filtered_data, x="age", nbins=10, title="Age Distribution of Players")
+fig = px.histogram(filtered_data, x="age", nbins=10)
 st.plotly_chart(fig)
 
 
@@ -327,7 +326,7 @@ st.dataframe(best_players[["short_name", "general_position", "value_eur", "overa
 st.markdown("### Team Attribute Heatmap")
 attribute_cols = ["pace", "shooting", "passing", "dribbling", "defending", "physic"]
 attribute_data = filtered_data[attribute_cols]
-fig = px.imshow(attribute_data.corr(), text_auto=True, title="Correlation Between Attributes")
+fig = px.imshow(attribute_data.corr(), text_auto=True)
 st.plotly_chart(fig)
 
 
